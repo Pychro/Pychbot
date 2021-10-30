@@ -1,0 +1,234 @@
+var tmi = require('tmi.js');
+const { TaskTimer } = require('tasktimer');
+const request = require('request-promise');
+const cheerio = require('cheerio');
+const fs = require('fs')
+const accountSid = 'ID';
+const authToken = 'Token';
+const client1 = require('twilio')(accountSid, authToken);
+const time = require('node-get-time');
+var options = {
+    options: {
+        debug: true
+    },
+    connection: {
+        cluster: "aws",
+        reconnect: true
+    },
+    identity: {
+        username: "Pychbot",
+        password: "[password]"
+    },
+    channels: ["ShadesofNate"]
+};
+
+var client = tmi.client(options);
+client.connect();
+
+function shit(err) {
+    if (err) throw err;
+}
+
+time.gettime(function(time) {
+    var dateandtime = time.dateTime;
+    var date = time.date;
+    var time = time.time;
+});
+
+
+
+
+client.on('chat', function(channel, user, message, self) {
+    fs.appendFile("log.txt", new Date().toISOString() + " - " + user.username + " --- " + message + "\n", shit);
+
+});
+
+
+
+/*
+client.on('chat', function(channel, user, message, self){
+	if(message === "!socials"){
+	client.action("ShadesofNate", user['display-name'] + " Want more of Nate? Instagram ➤ https://www.instagram.com/shadesofnate YouTube ➤ https://www.youtube.com/shadesofnate Twitter ➤ https://www.twitter.com/theshadesofnate");
+	}
+});
+*/
+client.on('chat', function(channel, user, message, self) {
+    if (message === "fuck you pychbot") {
+        client.say("ShadesofNate", "Fuck you buddy KEKW loser lookin ass");
+    }
+});
+var fallcounter = 0;
+
+client.on('chat', function(channel, user, message, self) {
+    if (message === "!posture") {
+        client.say("ShadesofNate", "Posture Check!");
+    }
+});
+
+let timeLength = 1;
+
+function timerDone(timerName) {
+    client.say("ShadesofNate", "The " + timerName + " timer is now done!");
+}
+
+function timerStuff(timerName, timerMin) {
+    setTimeout(timerDone, timerMin, timerName);
+}
+
+let isHere = "true";
+
+client.on('chat', function(channel, user, message, self) {
+    if (user.username == "pychro" || user['display-name'] == "Pychro") {
+        if (message.startsWith("!lurking") || message.startsWith("!Lurking")) {
+            isHere = message.split(' ')[1];
+            if (isHere == ("false" || "False")) {
+                client.say("ShadesofNate", "Pychro is no longer lurking!");
+
+            }
+            if (isHere == ("true" || "True")) {
+                client.say("ShadesofNate", "Pychro is now lurking!");
+            }
+        }
+    }
+});
+
+
+client.on('chat', function(channel, user, message, self) {
+    if (user.mod || user['user-type'] === 'mod') {
+        if (message.startsWith("!timer")) {
+            let timerName = message.split(' ')[1];
+            let timerLength = message.split(' ')[2];
+            let timerMin = timerLength * 1000 * 60;
+            client.say("ShadesofNate", "A " + timerLength + " minute timer has been started for " + timerName);
+            timerStuff(timerName, timerMin);
+        }
+    }
+});
+
+
+
+
+let subcount = 0
+
+client.on('chat', function(channel, user, message, self) {
+    if (user.mod || user['user-type'] === 'mod') {
+        if (message === "!changesubs") {
+            subcount = message.split(' ')[1];
+            client.say("ShadesOfNate", "The sub count has now been updated to " + subcount);
+
+        }
+    }
+});
+/*
+chatClient.onSub((channel, user) => {
+	chatClient.say(channel, `Thanks to @${user} for subscribing to the channel!`)
+	subcount++;
+	chatClient.say(channel, ``)
+})
+chatClient.onResub((channel, user, subInfo) => {
+	chatClient.say(
+		channel,
+		`Thanks to @${user} for subscribing to the channel for a total of ${subInfo.months} months!`
+	)
+	subcount++;
+})
+chatClient.onSubGift((channel, user, subInfo) => {
+	chatClient.say(
+		channel,
+		`Thanks to ${subInfo.gifter} for gifting a subscription to ${user}!`
+	)
+	subcount++;
+})
+
+*/
+client.on('chat', function(channel, user, message, self) {
+    if ((message.includes("Pychro") || message.includes("@Pychro") || message.includes("pychro") || message.includes("@pychro")) && isHere == ("true" || "True")) {
+
+        client1.messages
+            .create({
+                body: user.username + ' ' + message,
+                from: '',
+                to: ''
+            })
+            .then(message => console.log(message.sid));
+    }
+});
+
+
+	client.on('chat', function(channel, user, message, self){
+		if(message === "!request"){
+            
+			client1.messages
+			.create({
+				body: user.username + 'Someone is requesting to use Pychbot',
+				from: '',
+				to: ''
+			})
+			.then(message => console.log(message.sid));
+            
+            client.say("Shadesofnate", "Your request has been sent!");
+		}
+	});
+
+
+
+
+
+
+
+client.on('chat', function(channel, user, message, self) {
+    if (message === "!sus") {
+        client.say("Shadesofnate", "Thats a bit monkaSUS Brother");
+    }
+});
+
+client.on('chat', function(channel, user, message, self) {
+    if (message === "!deckads") {
+        client.say("ShadesOfNate", "Wanna see my deck? https://www.youtube.com/watch?v=tbazGVrbN-g ");
+    }
+});
+
+client.on('chat', function(channel, user, message, self) {
+    if (message === "!falls") {
+        client.say("ShadesofNate", "Nate has fallen " + fallcounter + " times KEKW");
+    }
+});
+
+client.on('chat', function(channel, user, message, self) {
+    if (user.mod || user['user-type'] === 'mod') {
+        if (message === "!addfall") {
+            fallcounter++;
+            client.say("ShadesOfNate", "Nate has fallen " + fallcounter + " times! KEKW");
+
+        }
+    }
+});
+
+let checkSubs = async(url) => {
+
+        let response = await request(url);
+        let $ = cheerio.load(response);
+        let subCount = $('[class="yt-subscription-button-subscriber-count-branded-horizontal subscribed yt-uix-tooltip"]').attr('title');
+        return subCount;
+    }
+    (async() => {
+        let url = 'http://www.youtube.com/shadesofnate';
+        let subCount = (await checkSubs(url));
+        client.on('chat', function(channel, user, message, self) {
+            if (message === "!ytsubs") {
+                client.say("ShadesofNate", "Nate has " + subCount + " subscribers on Youtube!");
+            }
+        });
+
+    })();
+/*
+let unknown = 1;
+let unknown2 = 2;
+	function testing(unknown, unknown2){
+		let total = unknown + unknown2;
+		return total;
+
+ */
+
+/*
+let commandList = [posture, deckads, sus];*/
